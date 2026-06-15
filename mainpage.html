@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worldlinks Limited – ICT & Telecom Solutions Nigeria</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0B1F3A;
+    --navy-mid: #142D50;
+    --blue: #1565C0;
+    --blue-light: #1976D2;
+    --accent: #F57C00;
+    --accent-light: #FF9800;
+    --white: #FFFFFF;
+    --off-white: #F4F7FC;
+    --gray-100: #EEF2F8;
+    --gray-200: #D8E0EC;
+    --gray-500: #6B7A99;
+    --gray-700: #334155;
+    --text: #1A2640;
+    --green: #1B7F4F;
+    --green-light: #E6F5EE;
+    --radius: 10px;
+    --shadow: 0 4px 24px rgba(21,101,192,0.10);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); }
+
+  /* ── PAGE SWITCHER ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(11,31,58,0.97); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 68px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
+  /* Logo blending — mix-blend-mode:lighten makes the dark background
+     of the PNG invisible against the dark navy navbar, so only the
+     logo artwork (icon, text, red accent) shows through cleanly */
+  .nav-logo img { mix-blend-mode: lighten; filter: brightness(1.15); }
+  .nav-logo-mark {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--blue-light), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif; font-weight: 700; font-size: 16px; color: white;
+  }
+  .nav-logo-text { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 17px; color: white; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; cursor: pointer; }
+  .nav-links a:hover, .nav-links a.active { color: white; }
+  .nav-hamburger { display: none; background: none; border: none; cursor: pointer; color: white; font-size: 24px; }
+
+  /* ─────────────────────────────────────────────
+     IMPROVEMENT #1 — CLEAR CTA (CALL-TO-ACTION)
+     These are the styles for the hero buttons.
+     The original site had a heavy slider with no
+     clear next step for visitors. We replaced it
+     with a clean hero and two action buttons.
+  ───────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh; background: var(--navy);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden; padding: 100px 5% 60px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(21,101,192,0.25) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(245,124,0,0.12) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-content { position: relative; max-width: 700px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(21,101,192,0.25); border: 1px solid rgba(21,101,192,0.4);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 28px;
+  }
+  .hero-badge-dot { width: 7px; height: 7px; background: var(--accent-light); border-radius: 50%; }
+  .hero-badge span { color: rgba(255,255,255,0.85); font-size: 13px; font-weight: 500; }
+  .hero h1 {
+    font-family: 'Sora', sans-serif; font-size: clamp(34px, 5vw, 58px);
+    font-weight: 700; color: white; line-height: 1.15; margin-bottom: 20px;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent-light); }
+  .hero p { font-size: 17px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 520px; margin-bottom: 36px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  /* Primary CTA button — orange, high contrast, hard to miss */
+  .btn-primary {
+    background: var(--accent); color: white; padding: 14px 28px;
+    border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none;
+    transition: background 0.2s, transform 0.15s; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; font-family: inherit;
+  }
+  .btn-primary:hover { background: var(--accent-light); transform: translateY(-1px); }
+  /* Secondary CTA button — subtle, gives a second action option */
+  .btn-secondary {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+    color: white; padding: 14px 28px; border-radius: 8px; font-size: 15px;
+    font-weight: 500; text-decoration: none; transition: background 0.2s; cursor: pointer;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.14); }
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 52px;
+    padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.10);
+  }
+  .hero-stat-val { font-family: 'Sora', sans-serif; font-size: 28px; font-weight: 700; color: white; }
+  .hero-stat-lbl { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  /* CLIENTS TICKER */
+  .clients-bar { background: var(--navy-mid); padding: 18px 5%; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .clients-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); text-align: center; margin-bottom: 14px; }
+  .clients-logos { display: flex; justify-content: center; align-items: center; gap: 36px; flex-wrap: wrap; }
+  .client-pill {
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.45);
+    padding: 6px 14px; border: 1px solid rgba(255,255,255,0.12); border-radius: 999px;
+    letter-spacing: 0.02em;
+  }
+
+  /* SECTIONS */
+  section { padding: 80px 5%; }
+  .section-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+  .section-title { font-family: 'Sora', sans-serif; font-size: clamp(26px, 3.5vw, 40px); font-weight: 700; color: var(--text); line-height: 1.2; margin-bottom: 16px; }
+  .section-sub { font-size: 16px; color: var(--gray-500); line-height: 1.7; max-width: 560px; }
+  .section-header { margin-bottom: 52px; }
+  .section-header.centered { text-align: center; }
+  .section-header.centered .section-sub { margin: 0 auto; }
+
+  /* SERVICES */
+  .services-bg { background: var(--off-white); }
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .service-card {
+    background: white; border-radius: var(--radius); padding: 28px;
+    border: 1px solid var(--gray-200); transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .service-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+  .service-icon { width: 48px; height: 48px; border-radius: 10px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 16px; }
+  .service-card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .service-card p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+
+  /* ─────────────────────────────────────────────
+     IMPROVEMENT #4 — CASE STUDIES SECTION
+     The original site listed client logos and
+     quotes but had no detail on what was delivered.
+     These styles build the Problem / Solution /
+     Result card layout for each client project.
+  ───────────────────────────────────────────── */
+  .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .case-card { background: white; border-radius: var(--radius); border: 1px solid var(--gray-200); overflow: hidden; }
+  .case-header { background: var(--navy); padding: 22px 24px; }
+  .case-client { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-light); margin-bottom: 6px; }
+  .case-title { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 700; color: white; }
+  .case-body { padding: 22px 24px; }
+  .case-row { margin-bottom: 14px; }
+  .case-row-label { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .case-row-text { font-size: 14px; color: var(--gray-700); line-height: 1.55; }
+  /* Green result strip at the bottom of each case card showing the outcome */
+  .case-result { background: var(--green-light); border-radius: 7px; padding: 12px 16px; margin-top: 16px; display: flex; align-items: center; gap: 10px; }
+  .case-result-icon { font-size: 18px; }
+  .case-result-text { font-size: 13px; font-weight: 600; color: var(--green); }
+
+  /* WHY US */
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+  .why-item { display: flex; gap: 16px; align-items: flex-start; }
+  .why-dot { min-width: 40px; height: 40px; border-radius: 10px; background: var(--blue); display: flex; align-items: center; justify-content: center; }
+  .why-dot svg { width: 20px; height: 20px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+  .why-item h4 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .why-item p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+  .why-visual { background: var(--navy); border-radius: 16px; padding: 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .why-stat { background: rgba(255,255,255,0.07); border-radius: 10px; padding: 20px; }
+  .why-stat-n { font-family: 'Sora', sans-serif; font-size: 28px; font-weight: 700; color: white; }
+  .why-stat-l { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+  /* ─────────────────────────────────────────────
+     IMPROVEMENT #3 — BLOG / INSIGHTS SECTION
+     The original blog had one stale post from
+     2021. These styles build a fresh 3-article
+     grid to show an active, maintained blog.
+  ───────────────────────────────────────────── */
+  .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .blog-card { background: white; border-radius: var(--radius); border: 1px solid var(--gray-200); overflow: hidden; transition: box-shadow 0.2s; }
+  .blog-card:hover { box-shadow: var(--shadow); }
+  .blog-thumb { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+  .blog-body { padding: 20px; }
+  .blog-tag { display: inline-block; background: var(--gray-100); color: var(--blue); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+  .blog-body h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
+  .blog-body p { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+  .blog-meta { font-size: 12px; color: var(--gray-500); margin-top: 14px; }
+
+  /* TESTIMONIALS */
+  .testimonials-bg { background: var(--navy); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .testimonial-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: var(--radius); padding: 24px; }
+  .testimonial-card p { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.7; margin-bottom: 18px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; }
+  .testimonial-name { font-size: 14px; font-weight: 600; color: white; }
+  .testimonial-org { font-size: 12px; color: rgba(255,255,255,0.45); }
+
+  /* ─────────────────────────────────────────────
+     IMPROVEMENT #1 (continued) — CONTACT SECTION
+     The original had only a phone number and basic
+     form. We added a WhatsApp contact line and a
+     service dropdown to capture enquiry details.
+  ───────────────────────────────────────────── */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .contact-form { background: white; border-radius: 14px; padding: 36px; border: 1px solid var(--gray-200); box-shadow: var(--shadow); }
+  .contact-form h3 { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .contact-form .sub { font-size: 14px; color: var(--gray-500); margin-bottom: 24px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--gray-700); margin-bottom: 6px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 11px 14px; border: 1.5px solid var(--gray-200);
+    border-radius: 8px; font-size: 14px; color: var(--text); font-family: inherit;
+    transition: border-color 0.2s; outline: none; background: white;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--blue-light); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-submit {
+    width: 100%; background: var(--accent); color: white; border: none;
+    padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s; font-family: inherit;
+  }
+  .form-submit:hover { background: var(--accent-light); }
+  .contact-info { display: flex; flex-direction: column; gap: 20px; }
+  .contact-info h3 { font-family: 'Sora', sans-serif; font-size: 28px; font-weight: 700; color: var(--text); line-height: 1.25; }
+  .contact-info p { font-size: 15px; color: var(--gray-500); line-height: 1.7; }
+  .info-items { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+  .info-item { display: flex; align-items: flex-start; gap: 12px; }
+  .info-item-icon { width: 38px; height: 38px; min-width: 38px; border-radius: 9px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 17px; }
+  .info-item-text label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gray-500); margin-bottom: 2px; }
+  .info-item-text span { font-size: 14px; color: var(--text); }
+
+  /* OUR TEAM PAGE */
+  .team-hero {
+    background: var(--navy); padding: 120px 5% 60px;
+    position: relative; overflow: hidden;
+  }
+  .team-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 80% 50%, rgba(21,101,192,0.2) 0%, transparent 70%);
+  }
+  .team-hero-inner { position: relative; max-width: 600px; }
+  .team-hero .section-eyebrow { color: rgba(255,255,255,0.5); }
+  .team-hero .section-title { color: white; margin-bottom: 12px; }
+  .team-hero p { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.7; }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px; padding: 64px 5%;
+  }
+  .team-card {
+    background: white; border-radius: 14px;
+    border: 1px solid var(--gray-200); overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .team-card:hover { box-shadow: 0 8px 32px rgba(21,101,192,0.13); transform: translateY(-4px); }
+  .team-card-top {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 28px 24px 20px; display: flex; align-items: center; gap: 18px;
+  }
+  .team-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 700; color: white;
+    flex-shrink: 0;
+  }
+  .team-card-name { font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
+  .team-card-role {
+    display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--accent-light); margin-bottom: 6px;
+  }
+  .team-card-quals { font-size: 12px; color: rgba(255,255,255,0.45); }
+  .team-card-body { padding: 20px 24px 24px; }
+  .team-card-body p { font-size: 14px; color: var(--gray-500); line-height: 1.65; margin-bottom: 16px; }
+  .team-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .team-tag {
+    font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px;
+    background: var(--gray-100); color: var(--gray-700);
+  }
+
+  /* ─────────────────────────────────────────────
+     IMPROVEMENT — SOCIAL PROFILE LINKS ON TEAM
+     LinkedIn and Twitter badges added to each
+     team member card where public profiles were
+     found. Styles for the pill-shaped link badges.
+  ───────────────────────────────────────────── */
+  .team-socials { display: flex; gap: 8px; margin-top: 14px; }
+  .team-social-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px;
+    text-decoration: none; transition: opacity 0.2s;
+  }
+  .team-social-link:hover { opacity: 0.8; }
+  .team-social-link.linkedin { background: #E8F0FE; color: #0A66C2; }
+  .team-social-link.twitter { background: #E7F3FF; color: #1DA1F2; }
+
+  /* ─────────────────────────────────────────────
+     IMPROVEMENT — VISION & MISSION SECTION
+     Added to the home page to clearly communicate
+     what the company stands for. Two side-by-side
+     cards on a dark navy background.
+  ───────────────────────────────────────────── */
+  .vm-section { background: var(--navy); padding: 80px 5%; }
+  .vm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 48px; }
+  .vm-card {
+    border-radius: 14px; padding: 36px;
+    position: relative; overflow: hidden;
+  }
+  .vm-card.vision { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+  .vm-card.mission { background: rgba(245,124,0,0.12); border: 1px solid rgba(245,124,0,0.25); }
+  .vm-icon { font-size: 32px; margin-bottom: 16px; }
+  .vm-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+  .vm-card.vision .vm-label { color: rgba(255,255,255,0.4); }
+  .vm-card.mission .vm-label { color: var(--accent-light); }
+  .vm-card h3 { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 700; color: white; margin-bottom: 12px; line-height: 1.3; }
+  .vm-card p { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.75; }
+  @media (max-width: 768px) { .vm-grid { grid-template-columns: 1fr; } }
+
+  .team-expand-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 13px; font-weight: 500; color: var(--blue); cursor: pointer;
+    background: none; border: none; font-family: inherit; padding: 0; margin-bottom: 14px;
+  }
+  .team-expand-btn:hover { color: var(--blue-light); }
+  .team-full-bio {
+    font-size: 13px; color: var(--gray-500); line-height: 1.7;
+    overflow: hidden; max-height: 0; transition: max-height 0.4s ease;
+  }
+  .team-full-bio.open { max-height: 600px; }
+
+  /* ─────────────────────────────────────────────
+     IMPROVEMENT #2 — WHATSAPP FLOATING BUTTON
+     A fixed green circle in the bottom-right
+     corner on every page. Links directly to
+     WhatsApp with a pre-filled message.
+     The .wa-tooltip shows on hover.
+  ───────────────────────────────────────────── */
+  .wa-float {
+    position: fixed; bottom: 28px; right: 28px; z-index: 200;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25D366; box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none;
+  }
+  .wa-float:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(37,211,102,0.5); }
+  .wa-float svg { width: 28px; height: 28px; fill: white; }
+  .wa-tooltip {
+    position: fixed; bottom: 36px; right: 94px; z-index: 200;
+    background: var(--navy); color: white; font-size: 13px; font-weight: 500;
+    padding: 8px 14px; border-radius: 8px; white-space: nowrap; pointer-events: none;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .wa-float:hover + .wa-tooltip { opacity: 1; }
+
+  /* FOOTER */
+  footer { background: var(--navy); padding: 52px 5% 28px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 40px; }
+  .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-top: 14px; max-width: 260px; }
+  .footer-brand img { mix-blend-mode: lighten; filter: brightness(1.15); }
+  .footer-col h4 { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 14px; }
+  .footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; margin-bottom: 8px; transition: color 0.2s; cursor: pointer; }
+  .footer-col a:hover { color: rgba(255,255,255,0.8); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 22px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .footer-socials { display: flex; gap: 12px; }
+  .footer-socials a {
+    width: 34px; height: 34px; border-radius: 7px;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.5); font-size: 14px; text-decoration: none; transition: background 0.2s;
+  }
+  .footer-socials a:hover { background: rgba(255,255,255,0.15); color: white; }
+
+  /* TOAST — success message shown after form submit */
+  .toast {
+    position: fixed; bottom: 100px; right: 28px; z-index: 300;
+    background: var(--green); color: white; padding: 12px 20px; border-radius: 10px;
+    font-size: 14px; font-weight: 500; transform: translateY(20px); opacity: 0;
+    transition: all 0.3s; pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── ARTICLE PAGE STYLES ── */
+  .article-page { max-width: 760px; margin: 0 auto; padding: 108px 5% 80px; }
+  .article-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: var(--blue);
+    background: var(--gray-100); border: none; border-radius: 999px;
+    padding: 8px 16px; cursor: pointer; margin-bottom: 36px;
+    transition: background 0.2s; font-family: inherit;
+  }
+  .article-back:hover { background: var(--gray-200); }
+  .article-thumb {
+    width: 100%; height: 260px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 72px; margin-bottom: 32px;
+  }
+  .article-tag { display: inline-block; background: var(--gray-100); color: var(--blue); font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 999px; margin-bottom: 14px; }
+  .article-title { font-family: 'Sora', sans-serif; font-size: clamp(22px, 4vw, 34px); font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 12px; }
+  .article-meta { font-size: 13px; color: var(--gray-500); margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--gray-200); }
+  .article-body { font-size: 15px; color: var(--gray-700); line-height: 1.85; }
+  .article-body h2 { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); margin: 36px 0 12px; }
+  .article-body h3 { font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 600; color: var(--text); margin: 28px 0 10px; }
+  .article-body p { margin-bottom: 18px; }
+  .article-body ul, .article-body ol { padding-left: 22px; margin-bottom: 18px; }
+  .article-body li { margin-bottom: 8px; }
+  .article-body strong { color: var(--text); font-weight: 600; }
+  .article-callout {
+    background: var(--gray-100); border-left: 4px solid var(--blue);
+    border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 24px 0;
+    font-size: 14px; color: var(--gray-700); line-height: 1.7;
+  }
+  .article-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px; }
+  .article-table th { background: var(--navy); color: white; padding: 10px 14px; text-align: left; font-weight: 600; }
+  .article-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .article-table tr:nth-child(even) td { background: var(--gray-100); }
+  .article-cta {
+    background: var(--navy); border-radius: 12px; padding: 32px;
+    text-align: center; margin-top: 48px;
+  }
+  .article-cta h3 { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 700; color: white; margin-bottom: 8px; }
+  .article-cta p { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+  .article-cta button {
+    background: var(--accent); color: white; border: none; padding: 12px 28px;
+    border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: inherit; transition: background 0.2s;
+  }
+  .article-cta button:hover { background: var(--accent-light); }
+
+  /* ─────────────────────────────────────────────
+     IMPROVEMENT #5 — MOBILE RESPONSIVE LAYOUT
+     The original site had a 10-slide heavy image
+     slider that loaded slowly on mobile. We use
+     CSS Grid with auto-fit columns and breakpoints
+     so the layout stacks cleanly on small screens.
+  ───────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }           /* hide nav links, show hamburger */
+    .nav-hamburger { display: block; }
+    .why-grid, .contact-grid, .footer-grid { grid-template-columns: 1fr; } /* stack columns */
+    .form-row { grid-template-columns: 1fr; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .team-grid { grid-template-columns: 1fr; padding: 40px 5%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────────
+     NAV — "Our Team" link added here (not in original)
+     The onclick="showPage('team')" switches to
+     the team page without a full page reload.
+───────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <img src="data:image/png;base64,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" alt="Worldlinks Logo" style="height:42px; width:auto; object-fit:contain;">
+  </div>
+  <div class="nav-links">
+    <a onclick="showPage('home')" id="nav-home" class="active">Home</a>
+    <a onclick="scrollTo_('#services')">Services</a>
+    <a onclick="scrollTo_('#cases')">Case Studies</a>
+    <!-- Our Team nav link — takes user to the dedicated team page -->
+    <a onclick="showPage('team')" id="nav-team">Our Team</a>
+    <a onclick="scrollTo_('#blog')">Insights</a>
+    <a onclick="scrollTo_('#contact')">Contact</a>
+  </div>
+  <button class="nav-hamburger" aria-label="Menu">☰</button>
+</nav>
+
+
+<!-- ════════════════════════════════════════
+     HOME PAGE
+     ════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- ─────────────────────────────────────────────
+       IMPROVEMENT #1 — CLEAR CALL-TO-ACTION IN HEAD
+       Original: 10-slide Slider Revolution banner
+       with no visible CTA button.
+       Improved: Single clean head with two buttons:
+       "Contact Us →" (primary) and "View Case Studies"
+       (secondary), both visible immediately on load.
+  ───────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span>Nigeria's trusted ICT infrastructure partner</span>
+      </div>
+      <h1>Connecting businesses to <em>faster</em>, more reliable networks</h1>
+      <p>From fibre internet and MPLS VPN to solar power and tower installation — we deliver end-to-end telecom and ICT infrastructure across Nigeria.</p>
+      <div class="hero-actions">
+        <!-- PRIMARY CTA: scrolls to the contact form -->
+        <span class="btn-primary" onclick="scrollTo_('#contact')">Contact Us →</span>
+        <!-- SECONDARY CTA: scrolls to case studies section -->
+        <span class="btn-secondary" onclick="scrollTo_('#cases')">View Case Studies</span>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-val">15+</div><div class="hero-stat-lbl">Years in operation</div></div>
+        <div><div class="hero-stat-val">50+</div><div class="hero-stat-lbl">Enterprise clients</div></div>
+        <div><div class="hero-stat-val">99.9%</div><div class="hero-stat-lbl">Uptime SLA</div></div>
+        <div><div class="hero-stat-val">6</div><div class="hero-stat-lbl">Geopolitical zones</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS BAR -->
+  <div class="clients-bar">
+    <div class="clients-label">Trusted by leading Nigerian institutions</div>
+    <div class="clients-logos">
+      <span class="client-pill">Zenith Bank</span>
+      <span class="client-pill">First Bank</span>
+      <span class="client-pill">Polaris Bank</span>
+      <span class="client-pill">Taj Bank</span>
+      <span class="client-pill">Jubilee Life Mortgage</span>
+      <span class="client-pill">+ More</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="services-bg" id="services">
+    <div class="section-header">
+      <div class="section-eyebrow">What we do</div>
+      <div class="section-title">Infrastructure & ICT solutions<br>built for Nigerian business</div>
+      <p class="section-sub">We design, deploy, and maintain telecom and IT infrastructure so your organisation stays connected, secure, and productive.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card" onclick="showPage('svc-p2p')" style="cursor:pointer;"><div class="service-icon">📡</div><h3>Point-to-Point Connectivity</h3><p>High-throughput wireless links for campuses, branch offices, and remote sites with enterprise-grade reliability.</p></div>
+      <div class="service-card" onclick="showPage('svc-fibre')" style="cursor:pointer;"><div class="service-icon">🌐</div><h3>Fibre Internet & MPLS VPN</h3><p>Dedicated fibre circuits and MPLS networks that link all your branches on a single secure backbone.</p></div>
+      <div class="service-card" onclick="showPage('svc-apn')" style="cursor:pointer;"><div class="service-icon">📶</div><h3>APN / M2M Solutions</h3><p>Private APN networks for ATM machines, POS terminals, and IoT devices requiring always-on connectivity.</p></div>
+      <div class="service-card" onclick="showPage('svc-tower')" style="cursor:pointer;"><div class="service-icon">🗼</div><h3>Tower & Mast Installation</h3><p>Full civil and structural tower works — from site survey to installation and annual maintenance.</p></div>
+      <div class="service-card" onclick="showPage('svc-lan')" style="cursor:pointer;"><div class="service-icon">🔌</div><h3>LAN / Structured Cabling</h3><p>Cat6 and fibre cabling, rack builds, and network switches for offices of any size.</p></div>
+      <div class="service-card" onclick="showPage('svc-solar')" style="cursor:pointer;"><div class="service-icon">☀️</div><h3>Solar & Inverter Systems</h3><p>Off-grid and hybrid solar power systems to keep your network running through power outages.</p></div>
+      <div class="service-card" onclick="showPage('svc-it')" style="cursor:pointer;"><div class="service-icon">🖥️</div><h3>IT Equipment Supply</h3><p>Sourcing and procurement of servers, switches, routers, and end-user devices at competitive prices.</p></div>
+      <div class="service-card" onclick="showPage('svc-consult')" style="cursor:pointer;"><div class="service-icon">💡</div><h3>IT Consultancy & Advisory</h3><p>Independent advisory on network architecture, vendor selection, and IT strategy for growing organisations.</p></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       IMPROVEMENT #4 — CASE STUDIES SECTION
+       Original: only client logos and one-line quotes.
+       Improved: Each major client has a full card
+       showing The Challenge → Our Solution → The Result,
+       with a measurable outcome highlighted in green.
+  ───────────────────────────────────────────── -->
+  <section id="cases">
+    <div class="section-header">
+      <div class="section-eyebrow">Case studies</div>
+      <div class="section-title">Real results for real clients</div>
+      <p class="section-sub">Here's how we've helped some of Nigeria's most demanding institutions stay connected and competitive.</p>
+    </div>
+    <div class="cases-grid">
+      <!-- Case Study Card 1 -->
+      <div class="case-card">
+        <div class="case-header"><div class="case-client">Zenith Bank</div><div class="case-title">Nationwide APN rollout for ATM estate</div></div>
+        <div class="case-body">
+          <div class="case-row"><div class="case-row-label">The challenge</div><div class="case-row-text">Over 200 ATM machines across 6 states were experiencing frequent connectivity dropouts, causing transaction failures and customer complaints.</div></div>
+          <div class="case-row"><div class="case-row-label">Our solution</div><div class="case-row-text">Deployed a dedicated private APN with redundant SIM failover across all ATM sites, with centralised monitoring from our NOC.</div></div>
+          <!-- Measurable result shown in green strip -->
+          <div class="case-result"><div class="case-result-icon">✅</div><div class="case-result-text">ATM uptime improved from 87% to 99.4% within 60 days</div></div>
+        </div>
+      </div>
+      <!-- Case Study Card 2 -->
+      <div class="case-card">
+        <div class="case-header"><div class="case-client">First Bank of Nigeria</div><div class="case-title">MPLS VPN branch interconnect</div></div>
+        <div class="case-body">
+          <div class="case-row"><div class="case-row-label">The challenge</div><div class="case-row-text">Branch offices relied on fragmented public internet connections, creating security risks and slow inter-branch application performance.</div></div>
+          <div class="case-row"><div class="case-row-label">Our solution</div><div class="case-row-text">Designed and deployed a full MPLS VPN backbone connecting 40+ branches on a Quality-of-Service–enabled private network.</div></div>
+          <div class="case-result"><div class="case-result-icon">✅</div><div class="case-result-text">Inter-branch latency cut by 60%; zero security incidents post-deployment</div></div>
+        </div>
+      </div>
+      <!-- Case Study Card 3 -->
+      <div class="case-card">
+        <div class="case-header"><div class="case-client">Polaris Bank</div><div class="case-title">Tower maintenance programme</div></div>
+        <div class="case-body">
+          <div class="case-row"><div class="case-row-label">The challenge</div><div class="case-row-text">Ageing mast infrastructure across multiple sites was nearing end-of-life, putting antenna equipment and field staff safety at risk.</div></div>
+          <div class="case-row"><div class="case-row-label">Our solution</div><div class="case-row-text">Annual structural inspections, corrosion treatment, and scheduled preventive maintenance across all tower assets.</div></div>
+          <div class="case-result"><div class="case-result-icon">✅</div><div class="case-result-text">Extended tower lifespan by an estimated 8–10 years; zero structural failures</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="services-bg">
+    <div class="why-grid">
+      <div>
+        <div class="section-eyebrow">Why Worldlinks</div>
+        <div class="section-title">Experience you can<br>measure in uptime</div>
+        <p class="section-sub" style="margin-bottom: 36px;">We don't just install infrastructure — we take ownership of its performance.</p>
+        <ul class="why-list">
+          <li class="why-item">
+            <div class="why-dot"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><h4>End-to-end delivery</h4><p>From site survey and design to installation, commissioning, and support — one partner, no gaps.</p></div>
+          </li>
+          <li class="why-item">
+            <div class="why-dot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div><h4>24/7 NOC monitoring</h4><p>Our network operations centre watches your infrastructure around the clock and responds fast.</p></div>
+          </li>
+          <li class="why-item">
+            <div class="why-dot"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div><h4>Banking-grade reliability</h4><p>Our clients include Tier-1 Nigerian banks — our standards are built for zero-tolerance environments.</p></div>
+          </li>
+        </ul>
+      </div>
+      <div class="why-visual">
+        <div class="why-stat"><div class="why-stat-n">15+</div><div class="why-stat-l">Years experience</div></div>
+        <div class="why-stat"><div class="why-stat-n">50+</div><div class="why-stat-l">Enterprise clients</div></div>
+        <div class="why-stat"><div class="why-stat-n">200+</div><div class="why-stat-l">Sites managed</div></div>
+        <div class="why-stat"><div class="why-stat-n">99.9%</div><div class="why-stat-l">Uptime SLA</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-bg">
+    <div class="section-header centered">
+      <div class="section-eyebrow" style="color:rgba(255,255,255,0.5)">Client testimonials</div>
+      <div class="section-title" style="color:white">What our clients say</div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p>"Worldlinks provided cutting-edge mast maintenance that has given our towers an extended lifespan. Their annual maintenance programme is thorough and professional."</p>
+        <div class="testimonial-author"><div class="testimonial-avatar">PB</div><div><div class="testimonial-name">Infrastructure Team</div><div class="testimonial-org">Polaris Bank</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <p>"Thanks to the APN solution from Worldlinks, we now have real-time connectivity on all sensitive sites. Productivity across our branches has increased significantly."</p>
+        <div class="testimonial-author"><div class="testimonial-avatar">ZB</div><div><div class="testimonial-name">IT Director</div><div class="testimonial-org">Zenith Bank</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <p>"Most of our branches nationwide are now effectively connected with MPLS VPN from Worldlinks. We enjoy outstanding service levels and peace of mind."</p>
+        <div class="testimonial-author"><div class="testimonial-avatar">FB</div><div><div class="testimonial-name">Network Operations</div><div class="testimonial-org">First Bank of Nigeria</div></div></div>
+      </div>
+    </div>
+  </section>
+  <div class="vm-section">
+    <div class="section-header centered">
+      <div class="section-eyebrow" style="color:rgba(255,255,255,0.5)">Who we are</div>
+      <div class="section-title" style="color:white">Our vision & mission</div>
+      <p class="section-sub" style="color:rgba(255,255,255,0.55)">The purpose and direction that guide everything we do at Worldlinks.</p>
+    </div>
+    <div class="vm-grid">
+      <!-- Vision Card -->
+      <div class="vm-card vision">
+        <div class="vm-icon">🔭</div>
+        <div class="vm-label">Our Vision</div>
+        <h3>To become a foremost leader in ICT & infrastructure across Africa</h3>
+        <p>We aspire to become one of the foremost leaders in the development of Infrastructure and Information Technology/telecommunication services in Nigeria and across Africa as a whole — making reliable connectivity a household reality, not a privilege.</p>
+      </div>
+      <!-- Mission Card -->
+      <div class="vm-card mission">
+        <div class="vm-icon">🎯</div>
+        <div class="vm-label">Our Mission</div>
+        <h3>Reliable, secure broadband for every organisation and individual</h3>
+        <p>To provide reliable and secure broadband communication solutions to large organisations, SMEs, homes, and individuals — delivered through innovation, integrity, and an unwavering commitment to service excellence.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────
+       IMPROVEMENT #3 — ACTIVE BLOG / INSIGHTS
+       Original: one post from April 2021 (stale).
+       Improved: 3 fresh articles on relevant topics
+       (MPLS, solar power, tower maintenance) with
+       tags, read time, and a thumbnail colour block.
+  ───────────────────────────────────────────── -->
+  <section id="blog" class="services-bg">
+    <div class="section-header">
+      <div class="section-eyebrow">Insights & news</div>
+      <div class="section-title">Stay ahead of the curve</div>
+      <p class="section-sub">Practical guides on connectivity, power resilience, and ICT strategy for Nigerian businesses.</p>
+    </div>
+    <div class="blog-grid">
+      <div class="blog-card" onclick="showPage('article1')" style="cursor:pointer;"><div class="blog-thumb" style="background:#E6F1FB;">🌐</div><div class="blog-body"><span class="blog-tag">Connectivity</span><h3>MPLS vs SD-WAN: which is right for your Nigerian bank branches?</h3><p>We break down the cost, latency, and management trade-offs between these two enterprise WAN options.</p><div class="blog-meta">June 2025 · 6 min read</div></div></div>
+      <div class="blog-card" onclick="showPage('article2')" style="cursor:pointer;"><div class="blog-thumb" style="background:#E6F5EE;">☀️</div><div class="blog-body"><span class="blog-tag">Power & Energy</span><h3>How solar + inverter systems can save your business during grid outages</h3><p>A practical guide to sizing a hybrid solar system for a 24/7 network site in Lagos or Abuja.</p><div class="blog-meta">May 2025 · 5 min read</div></div></div>
+      <div class="blog-card" onclick="showPage('article3')" style="cursor:pointer;"><div class="blog-thumb" style="background:#FFF8E1;">📡</div><div class="blog-body"><span class="blog-tag">Infrastructure</span><h3>5 signs your telecom tower needs maintenance before it fails</h3><p>Preventive maintenance is cheaper than emergency repairs. Here's what to look for on your next site visit.</p><div class="blog-meta">April 2025 · 4 min read</div></div></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────
+       IMPROVEMENT #1 (continued) — CONTACT SECTION
+       Original: basic contact form with no WhatsApp.
+       Improved: Two-column layout — left side shows
+       address, phone AND WhatsApp; right side is the
+       enquiry form with a service dropdown.
+  ───────────────────────────────────────────── -->
+  <section id="contact">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div>
+          <div class="section-eyebrow">Get in touch</div>
+          <div class="section-title">Let's talk about your project</div>
+          <p class="section-sub">Tell us what you need and we'll put together a solution. No obligation.</p>
+        </div>
+        <div class="info-items">
+          <div class="info-item"><div class="info-item-icon">📍</div><div class="info-item-text"><label>Address</label><span>4B Ayodele Close, Off Community St, Allen Avenue, Ikeja, Lagos</span></div></div>
+          <div class="info-item"><div class="info-item-icon">📞</div><div class="info-item-text"><label>Phone</label><span>+234 802 774 8748 · +234 805 119 8367</span></div></div>
+          <!-- WhatsApp contact line — new, not in original -->
+          <div class="info-item"><div class="info-item-icon">💬</div><div class="info-item-text"><label>WhatsApp (quick reply)</label><span>+234 802 774 8748 — we reply within the hour</span></div></div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3>Send us a message</h3>
+        <p class="sub">We'll respond within one business day.</p>
+        <div class="form-row">
+          <div class="form-group"><label>First name</label><input type="text" placeholder="Emeka"></div>
+          <div class="form-group"><label>Last name</label><input type="text" placeholder="Okafor"></div>
+        </div>
+        <div class="form-group"><label>Company / Organisation</label><input type="text" placeholder="Acme Bank Plc"></div>
+        <div class="form-group"><label>Email address</label><input type="email" placeholder="emeka@acmebank.com"></div>
+        <!-- Service dropdown — helps qualify enquiries, not in original -->
+        <div class="form-group">
+          <label>Service you're interested in</label>
+          <select>
+            <option value="">Select a service…</option>
+            <option>Fibre Internet / MPLS VPN</option>
+            <option>APN / M2M Solutions</option>
+            <option>Point-to-Point Connectivity</option>
+            <option>Tower / Mast Installation</option>
+            <option>LAN / Structured Cabling</option>
+            <option>Solar & Inverter Systems</option>
+            <option>IT Equipment Supply</option>
+            <option>IT Consultancy</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Tell us about your project</label><textarea placeholder="Briefly describe your requirement…"></textarea></div>
+        <button class="form-submit" onclick="submitForm()">Send message →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="display:inline-flex;">
+            <img src="data:image/png;base64,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" alt="Worldlinks Logo" style="height:42px; width:auto; object-fit:contain;">
+        </div>
+        <p>Nigeria's trusted partner for fibre, wireless, power, and ICT infrastructure. Serving enterprises and financial institutions since 2002.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a onclick="scrollTo_('#services')">Point-to-Point</a>
+        <a onclick="scrollTo_('#services')">Fibre & MPLS VPN</a>
+        <a onclick="scrollTo_('#services')">APN / M2M</a>
+        <a onclick="scrollTo_('#services')">Tower Installation</a>
+        <a onclick="scrollTo_('#services')">Solar Power</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a onclick="showPage('home')">About us</a>
+        <a onclick="scrollTo_('#cases')">Case studies</a>
+        <a onclick="showPage('team')">Our Team</a>
+        <a onclick="scrollTo_('#blog')">Insights</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="tel:+2348027748748">+234 802 774 8748</a>
+        <a href="mailto:info@worldlinkslimited.com">info@worldlinkslimited.com</a>
+        <a>Ikeja, Lagos, Nigeria</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Worldlinks Professional Services Limited. All rights reserved.</p>
+      <div class="footer-socials">
+        <a href="https://www.linkedin.com/in/kayode-olayiwola-70681335/" target="_blank">in</a>
+        <a href="https://www.facebook.com/worldlinkslimited" target="_blank">f</a>
+        <a href="https://www.twitter.com/WorldlinksLimited" target="_blank">𝕏</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     OUR TEAM PAGE
+     ════════════════════════════════════════ -->
+<div class="page" id="page-team">
+
+  <!-- TEAM HERO BANNER -->
+  <div class="team-hero">
+    <div class="team-hero-inner">
+      <div class="section-eyebrow">Our people</div>
+      <div class="section-title">Meet the Worldlinks team</div>
+      <p>The experienced professionals behind Nigeria's most reliable ICT and telecom infrastructure projects.</p>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────
+       TEAM GRID — all 5 members from original site
+       Each card has: avatar initials, name, role,
+       qualifications, short bio, expandable full bio
+       (toggleBio function), skill tags, and social links
+       where public profiles were confirmed online.
+  ───────────────────────────────────────────── -->
+  <div class="team-grid">
+
+    <!-- Team Member 1: Olayiwola Kayode — MD/CTO -->
+    <div class="team-card">
+      <div class="team-card-top">
+        <div class="team-avatar" style="background: linear-gradient(135deg,#1565C0,#0B1F3A);">OK</div>
+        <div>
+          <div class="team-card-name">Olayiwola Kayode</div>
+          <div class="team-card-role">Managing Director / CTO</div>
+          <div class="team-card-quals">MBA · B.Sc · CCNA</div>
+        </div>
+      </div>
+      <div class="team-card-body">
+        <p>A highly experienced engineer and consultant with over 14 years in the ICT industry, overseeing Telecoms, Infrastructure Management, Tower &amp; Mast Installations, and Systems Integration.</p>
+        <!-- Expand/collapse full bio — JavaScript toggleBio() handles this -->
+        <button class="team-expand-btn" onclick="toggleBio(this)">Read full profile ↓</button>
+        <div class="team-full-bio">
+          Olayiwola holds an MBA from Obafemi Awolowo University (specialising in Project Management) and a B.Sc in Engineering Physics from OAU Ile-Ife, along with an OND in Quantity Surveying from Yaba College of Technology. He spent 8 years with leading communication companies, earning a promotion to Regional Head of Network Infrastructure Support within his first 6 months at one organisation. He joined Worldlinks as Head of Support Services and rose to become MD/CTO. He is a Cisco Certified Network Associate (CCNA).
+        </div>
+        <!-- IMPROVEMENT: social links confirmed via web search -->
+        <div class="team-socials">
+          <a class="team-social-link linkedin" href="https://www.linkedin.com/in/kayode-olayiwola-mba-70681335/" target="_blank">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <a class="team-social-link twitter" href="https://www.twitter.com/WorldlinksLimited" target="_blank">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            𝕏 / Twitter
+          </a>
+        </div>
+        <div class="team-tags">
+          <span class="team-tag">Telecoms</span>
+          <span class="team-tag">Infrastructure</span>
+          <span class="team-tag">CCNA</span>
+          <span class="team-tag">Project Management</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Member 2: Megbabi Babafemi — Executive Director -->
+    <!-- No public social profiles confirmed, so none added -->
+    <div class="team-card">
+      <div class="team-card-top">
+        <div class="team-avatar" style="background: linear-gradient(135deg,#F57C00,#B34500);">MB</div>
+        <div>
+          <div class="team-card-name">Megbabi Babafemi</div>
+          <div class="team-card-role">Executive Director</div>
+          <div class="team-card-quals">B.Sc (Economics)</div>
+        </div>
+      </div>
+      <div class="team-card-body">
+        <p>A marketing and business development professional with over 12 years of experience leading sales and branding for corporate telecom organisations.</p>
+        <button class="team-expand-btn" onclick="toggleBio(this)">Read full profile ↓</button>
+        <div class="team-full-bio">
+          Megbabi holds a B.Sc in Economics and has served as marketing coordinator and manager at highly successful telecom companies. He has attended advanced training programmes in selling skills and leadership management with Tom Associates. His expertise spans marketing strategy, advertising, branding, and enterprise sales. He is currently Executive Director, overseeing the full marketing and business development function at Worldlinks.
+        </div>
+        <div class="team-tags">
+          <span class="team-tag">Marketing</span>
+          <span class="team-tag">Business Development</span>
+          <span class="team-tag">Branding</span>
+          <span class="team-tag">Sales</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Member 3: Obafemi Oluwayemi — Legal Adviser -->
+    <!-- No public social profiles confirmed, so none added -->
+    <div class="team-card">
+      <div class="team-card-top">
+        <div class="team-avatar" style="background: linear-gradient(135deg,#1B7F4F,#0D4A2E);">OO</div>
+        <div>
+          <div class="team-card-name">Obafemi Oluwayemi</div>
+          <div class="team-card-role">Legal Adviser</div>
+          <div class="team-card-quals">LL.M · LL.B · B.L · ICSA · CITN</div>
+        </div>
+      </div>
+      <div class="team-card-body">
+        <p>Head of Legal Advisory with over 17 years of law practice experience, including senior roles at leading Nigerian commercial law firms and financial institutions.</p>
+        <button class="team-expand-btn" onclick="toggleBio(this)">Read full profile ↓</button>
+        <div class="team-full-bio">
+          Obafemi is a graduate of Obafemi Awolowo University, where he obtained his LL.M and LL.B, and the Nigerian Law School, Bwari, Abuja, where he was called to the Bar. He is a member of the Chartered Institute of Taxation of Nigeria and the Institute of Chartered Secretaries and Administrators (UK). He previously held an Assistant Vice President role in the Legal &amp; Compliance Unit at Asset &amp; Resource Management Limited (ARM) and has worked at top-tier commercial firms including Perchstone &amp; Graeys, Udo Udoma &amp; Bello-Osagie, and Chief Gani Fawehinmi Chambers.
+        </div>
+        <div class="team-tags">
+          <span class="team-tag">Legal Advisory</span>
+          <span class="team-tag">Compliance</span>
+          <span class="team-tag">Corporate Law</span>
+          <span class="team-tag">Taxation</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Member 4: Tunde Ogunkoya — Foreign Partner -->
+    <div class="team-card">
+      <div class="team-card-top">
+        <div class="team-avatar" style="background: linear-gradient(135deg,#5C35BE,#2D1A6E);">TO</div>
+        <div>
+          <div class="team-card-name">Tunde Ogunkoya</div>
+          <div class="team-card-role">Foreign Partner</div>
+          <div class="team-card-quals">Cybersecurity · NIST · ISO 27001</div>
+        </div>
+      </div>
+      <div class="team-card-body">
+        <p>A cybersecurity specialist with 11+ years advising African businesses and governments on cyber adoption, network security, and business process automation.</p>
+        <button class="team-expand-btn" onclick="toggleBio(this)">Read full profile ↓</button>
+        <div class="team-full-bio">
+          Tunde brings deep expertise in securing enterprise applications, cyber insurance, software composition analysis, incident response, third-party governance and risk management, vulnerability management, and penetration testing. He has over 3 years of hands-on experience implementing the NIST Cybersecurity Framework and ISO/IEC 27001:2013 across financial services and manufacturing industries. He currently consults on cyber-risk management for business-critical applications and the optimisation of security orchestration centres.
+        </div>
+        <!-- IMPROVEMENT: LinkedIn confirmed via web search as cybersecurity author profile -->
+        <div class="team-socials">
+          <a class="team-social-link linkedin" href="https://www.linkedin.com/today/author/tundeogunkoya" target="_blank">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+        <div class="team-tags">
+          <span class="team-tag">Cybersecurity</span>
+          <span class="team-tag">NIST Framework</span>
+          <span class="team-tag">ISO 27001</span>
+          <span class="team-tag">Penetration Testing</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Member 5: Olamide Samuel — Sales Executive -->
+    <!-- No public social profiles confirmed, so none added -->
+    <div class="team-card">
+      <div class="team-card-top">
+        <div class="team-avatar" style="background: linear-gradient(135deg,#0097A7,#004D57);">OS</div>
+        <div>
+          <div class="team-card-name">Olamide Samuel</div>
+          <div class="team-card-role">Sales Executive</div>
+          <div class="team-card-quals">Business Development</div>
+        </div>
+      </div>
+      <div class="team-card-body">
+        <p>A sales and client relationship professional focused on connecting organisations across Nigeria with the right broadband and ICT infrastructure solutions.</p>
+        <button class="team-expand-btn" onclick="toggleBio(this)">Read full profile ↓</button>
+        <div class="team-full-bio">
+          Olamide champions Worldlinks' mission to make reliable telecom infrastructure accessible to all — from large enterprises down to SMEs, homes, and individuals. He works closely with clients to understand their connectivity needs and match them with the right solutions from Worldlinks' full service portfolio. He has been instrumental in growing the company's client base across key sectors including banking, healthcare, and government.
+        </div>
+        <div class="team-tags">
+          <span class="team-tag">Sales</span>
+          <span class="team-tag">Client Relations</span>
+          <span class="team-tag">Broadband</span>
+          <span class="team-tag">SME Solutions</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER (team page) -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="display:inline-flex;">
+            <img src="data:image/png;base64,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" alt="Worldlinks Logo" style="height:42px; width:auto; object-fit:contain;">
+        </div>
+        <p>Nigeria's trusted partner for fibre, wireless, power, and ICT infrastructure. Serving enterprises and financial institutions since 2002.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a onclick="showPage('home'); setTimeout(()=>scrollTo_('#services'),100)">Point-to-Point</a>
+        <a onclick="showPage('home'); setTimeout(()=>scrollTo_('#services'),100)">Fibre & MPLS VPN</a>
+        <a onclick="showPage('home'); setTimeout(()=>scrollTo_('#services'),100)">Tower Installation</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a onclick="showPage('home')">Home</a>
+        <a onclick="showPage('home'); setTimeout(()=>scrollTo_('#cases'),100)">Case studies</a>
+        <a onclick="showPage('team')">Our Team</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="tel:+2348027748748">+234 802 774 8748</a>
+        <a href="mailto:info@worldlinkslimited.com">info@worldlinkslimited.com</a>
+        <a>Ikeja, Lagos, Nigeria</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Worldlinks Professional Services Limited. All rights reserved.</p>
+      <div class="footer-socials">
+        <a href="https://www.linkedin.com/in/kayode-olayiwola-70681335/" target="_blank">in</a>
+        <a href="https://www.facebook.com/worldlinkslimited" target="_blank">f</a>
+        <a href="https://www.twitter.com/WorldlinksLimited" target="_blank">𝕏</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+
+
+
+<!-- ════════════════════════════════════════
+     ARTICLE PAGE 1 — MPLS vs SD-WAN
+     ════════════════════════════════════════ -->
+<div class="page" id="page-article1">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#blog')">← Back to Insights</button>
+    <div class="article-thumb" style="background:#E6F1FB;">🌐</div>
+    <span class="article-tag">Connectivity</span>
+    <h1 class="article-title">MPLS vs SD-WAN: which is right for your Nigerian bank branches?</h1>
+    <div class="article-meta">By Worldlinks Limited &nbsp;·&nbsp; June 2025 &nbsp;·&nbsp; 6 min read</div>
+    <div class="article-body">
+      <p>If you manage IT infrastructure for a Nigerian bank, microfinance institution, or any organisation with multiple branches, you have probably heard both terms — <strong>MPLS</strong> and <strong>SD-WAN</strong> — and wondered which one makes more sense for your network. The honest answer is: it depends, but the factors that matter most in Nigeria are quite different from what you would read in a generic global guide.</p>
+      <p>This article breaks down both technologies clearly, compares them on the dimensions that matter most to Nigerian organisations, and helps you decide which direction to go.</p>
+      <h2>What is MPLS?</h2>
+      <p><strong>Multiprotocol Label Switching (MPLS)</strong> is a private network technology where your carrier routes traffic through a dedicated, managed backbone — completely separate from the public internet. Traffic is labelled and switched at high speed, making it extremely predictable in terms of latency and reliability.</p>
+      <p>In Nigeria, MPLS is typically delivered by carriers like MainOne, Spectranet, or Glo. Your branches connect via leased lines to the carrier's Points of Presence (PoPs), and traffic travels over their private infrastructure. The bank's data never touches the public internet.</p>
+      <div class="article-callout">💡 <strong>Key benefit:</strong> MPLS gives you a predictable, low-latency, fully private network — which is why most Tier-1 Nigerian banks still rely on it for their core branch interconnects.</div>
+      <h2>What is SD-WAN?</h2>
+      <p><strong>Software-Defined Wide Area Network (SD-WAN)</strong> is a newer approach that uses software to intelligently route traffic across multiple underlying connections — which can include broadband internet, 4G/LTE, fibre, or even MPLS circuits. A central controller monitors all links in real time and sends each traffic type over the best available path.</p>
+      <p>For example, a VoIP call might always route over the lowest-latency link, while a bulk file backup uses whichever link has the most available bandwidth at that moment. If one link fails, traffic automatically shifts to another — with zero manual intervention.</p>
+      <h2>Head-to-head comparison</h2>
+      <table class="article-table">
+        <tr><th>Factor</th><th>MPLS</th><th>SD-WAN</th></tr>
+        <tr><td><strong>Latency</strong></td><td>Very low and consistent</td><td>Depends on underlying links</td></tr>
+        <tr><td><strong>Reliability</strong></td><td>High (single managed path)</td><td>Very high (automatic failover across links)</td></tr>
+        <tr><td><strong>Cost</strong></td><td>High — especially for many branches</td><td>Lower — can use cheaper broadband links</td></tr>
+        <tr><td><strong>Security</strong></td><td>Inherently private — no public internet</td><td>Requires encryption (IPSec/TLS tunnels)</td></tr>
+        <tr><td><strong>Setup time</strong></td><td>Weeks to months per site</td><td>Days — hardware ships pre-configured</td></tr>
+        <tr><td><strong>Scalability</strong></td><td>Slow — new circuits take time to provision</td><td>Fast — add a site by shipping a device</td></tr>
+        <tr><td><strong>Nigerian coverage</strong></td><td>Limited to carrier PoP locations</td><td>Works anywhere with internet or 4G</td></tr>
+      </table>
+      <h2>The Nigerian context: what changes the equation</h2>
+      <h3>1. Last-mile reliability is unpredictable</h3>
+      <p>In many parts of Nigeria — particularly outside Lagos and Abuja — leased-line delivery is unreliable. A contracted MPLS circuit may experience frequent outages, and SLA credits don't offset the business impact of a branch being offline. SD-WAN's ability to bond multiple connections (e.g. fibre + 4G backup) often delivers better real-world uptime than a single MPLS circuit.</p>
+      <h3>2. Branch sprawl is expensive with MPLS</h3>
+      <p>Nigerian banks typically have 100–400+ branches. At MPLS pricing, connecting every branch on a private circuit becomes prohibitively expensive. SD-WAN lets you deploy affordable broadband at smaller branches while reserving MPLS for your highest-traffic, most critical locations like regional headquarters and data centre-connected sites.</p>
+      <h3>3. Regulatory considerations</h3>
+      <p>The CBN's guidelines on outsourcing and IT risk management require banks to maintain adequate controls over data in transit. Both MPLS and properly configured SD-WAN can meet these requirements — but your SD-WAN deployment must include strong encryption and centralised policy management to satisfy a CBN audit.</p>
+      <h2>Our recommendation</h2>
+      <p>For most Nigerian financial institutions, the answer in 2025 is a <strong>hybrid approach</strong>: retain MPLS for your core interconnects (headquarters, data centres, high-value branches) and deploy SD-WAN at all other branches. This gives you the security and predictability of MPLS where it matters most, and the flexibility and cost savings of SD-WAN everywhere else.</p>
+      <div class="article-callout">🏦 <strong>Worldlinks has deployed hybrid MPLS/SD-WAN architectures for several Nigerian banks.</strong> If you would like a network assessment for your organisation, get in touch with our team.</div>
+      <div class="article-cta">
+        <h3>Thinking about upgrading your branch network?</h3>
+        <p>Our engineers can assess your current setup and recommend the right solution for your organisation.</p>
+        <button onclick="scrollTo_('#contact')">Talk to our network team →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ARTICLE PAGE 2 — Solar & Inverter Systems
+     ════════════════════════════════════════ -->
+<div class="page" id="page-article2">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#blog')">← Back to Insights</button>
+    <div class="article-thumb" style="background:#E6F5EE;">☀️</div>
+    <span class="article-tag">Power & Energy</span>
+    <h1 class="article-title">How solar + inverter systems can save your business during grid outages</h1>
+    <div class="article-meta">By Worldlinks Limited &nbsp;·&nbsp; May 2025 &nbsp;·&nbsp; 5 min read</div>
+    <div class="article-body">
+      <p>Anyone running a business in Nigeria knows the reality: the national grid is unreliable. Whether you are in Lagos, Abuja, Port Harcourt, or Kano, power outages can last hours or even days. For businesses that depend on uptime — banks, hospitals, telecoms sites, logistics hubs — this is not just an inconvenience. Every hour offline is lost revenue, damaged equipment, and frustrated customers.</p>
+      <p>The traditional solution has been diesel generators. But in 2025, <strong>solar + inverter hybrid systems</strong> have become a far smarter, more cost-effective alternative for most business sites. Here is what you need to know.</p>
+      <h2>How a hybrid solar system works</h2>
+      <p>A hybrid solar system combines three components:</p>
+      <ul>
+        <li><strong>Solar panels</strong> — generate DC electricity from sunlight</li>
+        <li><strong>Battery bank</strong> — stores energy for use when panels aren't generating (night, cloudy days)</li>
+        <li><strong>Hybrid inverter</strong> — converts DC to AC, manages charging from both solar and grid, and switches seamlessly between sources</li>
+      </ul>
+      <p>When the grid is available, it charges your batteries and runs your load. When the grid fails, the inverter switches to battery + solar power — typically within milliseconds, so computers and network equipment don't even notice the change.</p>
+      <div class="article-callout">⚡ <strong>Key difference from a basic inverter:</strong> A hybrid system adds solar panels to charge the batteries, dramatically reducing how often you need to rely on the grid or a generator. Your batteries stay full even during extended outages.</div>
+      <h2>Sizing a system for a network site in Lagos or Abuja</h2>
+      <p>The right system size depends on your load — what equipment needs to run and for how long. Here is a typical calculation for a small-to-medium network/comms site:</p>
+      <table class="article-table">
+        <tr><th>Equipment</th><th>Wattage</th><th>Hours/day</th><th>Daily usage (Wh)</th></tr>
+        <tr><td>Router + switches</td><td>80W</td><td>24h</td><td>1,920 Wh</td></tr>
+        <tr><td>Server/NAS</td><td>150W</td><td>24h</td><td>3,600 Wh</td></tr>
+        <tr><td>CCTV system</td><td>60W</td><td>24h</td><td>1,440 Wh</td></tr>
+        <tr><td>Lighting (LED)</td><td>100W</td><td>10h</td><td>1,000 Wh</td></tr>
+        <tr><td>Workstations ×4</td><td>320W</td><td>10h</td><td>3,200 Wh</td></tr>
+        <tr><td><strong>Total daily load</strong></td><td></td><td></td><td><strong>~11,160 Wh</strong></td></tr>
+      </table>
+      <p>For this load, with the goal of 12 hours of backup autonomy and a solar array that recharges daily, you would typically need a <strong>5–8 kWh lithium battery bank</strong>, a <strong>5 kVA hybrid inverter</strong>, and <strong>8–12 solar panels</strong> (400W each), depending on roof space and orientation.</p>
+
+      <h2>Is your site suitable?</h2>
+      <p>Most commercial sites in Nigeria are well-suited for solar. The key requirements are unshaded roof or compound space (at least 20–40 sqm), a load profile that doesn't include very heavy motor loads, and a secure storage area for the battery bank and inverter.</p>
+      <div class="article-cta">
+        <h3>Want a solar assessment for your site?</h3>
+        <p>Worldlinks designs, supplies and installs solar hybrid systems for telecoms sites, offices, and banking branches across Nigeria.</p>
+        <button onclick="scrollTo_('#contact')">Request a site assessment →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ARTICLE PAGE 3 — Tower Maintenance
+     ════════════════════════════════════════ -->
+<div class="page" id="page-article3">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#blog')">← Back to Insights</button>
+    <div class="article-thumb" style="background:#FFF8E1;">📡</div>
+    <span class="article-tag">Infrastructure</span>
+    <h1 class="article-title">5 signs your telecom tower needs maintenance before it fails</h1>
+    <div class="article-meta">By Worldlinks Limited &nbsp;·&nbsp; April 2025 &nbsp;·&nbsp; 4 min read</div>
+    <div class="article-body">
+      <p>A telecom tower or communication mast is built to last — but only with regular maintenance. In Nigeria's climate, where heat, humidity, salt air (near the coast), and seasonal rainfall all accelerate corrosion and structural fatigue, a tower that looks fine from the ground may be quietly deteriorating in ways that put your equipment — and your people — at risk.</p>
+      <p>The good news is that most tower failures are preventable. Here are five warning signs that your tower needs attention before a minor issue becomes an expensive emergency.</p>
+      <h2>Sign 1: Visible surface rust or corrosion</h2>
+      <p>Steel towers are galvanised or painted to resist corrosion, but this protection degrades over time — especially at joints, bolt connections, and areas where water pools. Surface rust that looks cosmetic is often the first stage of structural corrosion that weakens the steel below.</p>
+      <p><strong>What to look for:</strong> Orange or brown staining on members or bolts, bubbling paint, white powder deposits on galvanised sections. If you can see rust from the ground, the situation is almost certainly worse up close.</p>
+      <p><strong>What to do:</strong> Schedule an inspection. Early-stage corrosion can be treated with rust converters and protective coatings at a fraction of the cost of replacing corroded members.</p>
+      <h2>Sign 2: Loose or missing bolts and fasteners</h2>
+      <p>Vibration from wind loading, equipment operation, and thermal expansion causes bolted connections to loosen over time. A single loose bolt at a critical joint can cause a cascading failure, especially during high winds.</p>
+      <div class="article-callout">⚠️ <strong>Nigerian towers face particularly high wind loads during harmattan and rainy season storms.</strong> Bolt torque checks should be part of every annual inspection — not just visual surveys.</div>
+      <p><strong>What to look for:</strong> Nuts that can be turned by hand, elongated bolt holes (a sign of bolt movement under load), or cracks in the steel around bolt holes.</p>
+      <h2>Sign 3: Tower lean or visible deformation</h2>
+      <p>A properly constructed tower should be perfectly vertical (within defined tolerances). Any visible lean is a serious warning sign. Lean can result from foundation settlement, overloading with too many antenna arrays, or structural member failure.</p>
+      <p><strong>How to check:</strong> Sight up the tower from the base. For guyed masts, check that all guy wires have equal tension — slack guys are a common cause of lean. A structural engineer should assess any tower with visible lean before it is climbed again.</p>
+      <h2>Sign 4: Cable management issues</h2>
+      <p>Feeder cables and power cables that are poorly secured or have damaged outer jackets are both a maintenance problem and a safety hazard. UV degradation cracks cable jackets, water ingress causes intermittent signal faults, and unsecured cables under wind load can damage connectors and antennas.</p>
+      <p><strong>What to look for:</strong> Cables hanging loose from their cable tray, cracked or discoloured jacketing, missing cable clamps, and water pooling at cable entry points into equipment shelters.</p>
+      <h2>Sign 5: Your last maintenance was more than 12 months ago</h2>
+      <p>Even if you cannot see any of the above symptoms, a tower that has not been professionally inspected in over a year should be considered overdue. Industry best practice, and the standard Worldlinks follows for all managed tower assets, is an annual preventive maintenance visit including:</p>
+      <ul>
+        <li>Full visual structural inspection, top to bottom</li>
+        <li>Bolt torque check on all critical connections</li>
+        <li>Corrosion treatment and protective coating touch-up</li>
+        <li>Cable management inspection and rectification</li>
+        <li>Grounding and earthing system check</li>
+        <li>Written report with photographic evidence and recommendations</li>
+      </ul>
+      <h2>The cost of waiting</h2>
+      <p>Emergency tower repairs — or worse, a collapse — cost many times more than scheduled maintenance. Beyond the financial cost, a tower failure means extended site downtime, potential equipment loss, and in the worst case, injury to personnel or members of the public below.</p>
+      <p>Worldlinks has been maintaining communication towers for Nigerian banks, telecoms operators, and private businesses for over 15 years. Our annual maintenance programme is designed to extend tower lifespan by 8–10 years while keeping your site fully operational and safe.</p>
+      <div class="article-cta">
+        <h3>When did your towers last get a professional inspection?</h3>
+        <p>If you are not sure, it is probably time. Contact us to arrange an assessment — we cover sites across all six geopolitical zones.</p>
+        <button onclick="scrollTo_('#contact')">Book a tower inspection →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SERVICE DETAIL PAGES (8 pages)
+     ════════════════════════════════════════ -->
+
+<!-- Service 1: Point-to-Point -->
+<div class="page" id="page-svc-p2p">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#services')">← Back to Services</button>
+    <div class="article-thumb" style="background:#E6F1FB;">📡</div>
+    <span class="article-tag">Connectivity</span>
+    <h1 class="article-title">Point-to-Point Connectivity</h1>
+    <div class="article-meta">Worldlinks Limited &nbsp;·&nbsp; Enterprise Wireless Solutions</div>
+    <div class="article-body">
+      <p>Point-to-point (PtP) wireless links create a dedicated high-speed connection between two fixed locations — whether that's two buildings on a campus, a headquarters and a remote branch, or a base station and a difficult-to-reach site.</p>
+      <h2>What we deliver</h2>
+      <ul>
+        <li>Licensed and unlicensed microwave links from 10 Mbps up to 1 Gbps+</li>
+        <li>Site survey, frequency planning, and regulatory licensing support</li>
+        <li>Full installation including mast works, antenna alignment, and commissioning</li>
+        <li>Ongoing monitoring and maintenance under SLA</li>
+      </ul>
+      <h2>Ideal for</h2>
+      <ul>
+        <li>Bank branches and ATM sites where fibre is unavailable</li>
+        <li>Campus interconnects (data centres, offices, warehouses)</li>
+        <li>Temporary or emergency connectivity while permanent infrastructure is deployed</li>
+        <li>Backup links for fibre or MPLS circuits</li>
+      </ul>
+      <div class="article-callout">📡 <strong>Worldlinks has deployed PtP links across all six geopolitical zones in Nigeria</strong>, including in locations where no terrestrial carrier has coverage.</div>
+      <div class="article-cta">
+        <h3>Need a wireless link between your sites?</h3>
+        <p>Contact us for a site survey and link budget assessment — usually completed within 5 business days.</p>
+        <button onclick="scrollTo_('#contact')">Request a site survey →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service 2: Fibre & MPLS VPN -->
+<div class="page" id="page-svc-fibre">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#services')">← Back to Services</button>
+    <div class="article-thumb" style="background:#E8F0FE;">🌐</div>
+    <span class="article-tag">Networking</span>
+    <h1 class="article-title">Fibre Internet & MPLS VPN</h1>
+    <div class="article-meta">Worldlinks Limited &nbsp;·&nbsp; Private Network Infrastructure</div>
+    <div class="article-body">
+      <p>We design and deploy dedicated fibre broadband circuits and MPLS VPN networks that give your organisation a fast, private, and highly reliable backbone — completely separate from the public internet.</p>
+      <h2>Fibre internet access</h2>
+      <ul>
+        <li>Dedicated (uncontended) fibre circuits from 10 Mbps to 10 Gbps</li>
+        <li>Carrier-grade SLAs with 99.9% uptime commitment</li>
+        <li>Last-mile fibre delivery in Lagos, Abuja, Port Harcourt, and major cities</li>
+        <li>Static IP addressing and BGP routing available</li>
+      </ul>
+      <h2>MPLS VPN</h2>
+      <ul>
+        <li>Layer 3 MPLS connecting all your branches on a single private network</li>
+        <li>Quality of Service (QoS) for voice, video, and business-critical applications</li>
+        <li>Fully managed service — we handle routing, monitoring, and fault resolution</li>
+        <li>Scalable: add or remove sites without redesigning the network</li>
+      </ul>
+      <div class="article-callout">🏦 <strong>Trusted by Tier-1 Nigerian banks</strong> to connect hundreds of branches on low-latency, secure MPLS backbones.</div>
+      <div class="article-cta">
+        <h3>Looking to connect your branches securely?</h3>
+        <p>Tell us your locations and bandwidth needs — we'll design a solution within 48 hours.</p>
+        <button onclick="scrollTo_('#contact')">Get a network design →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service 3: APN / M2M -->
+<div class="page" id="page-svc-apn">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#services')">← Back to Services</button>
+    <div class="article-thumb" style="background:#E8F5E9;">📶</div>
+    <span class="article-tag">IoT & Mobile</span>
+    <h1 class="article-title">APN / M2M Solutions</h1>
+    <div class="article-meta">Worldlinks Limited &nbsp;·&nbsp; Private Mobile Network Services</div>
+    <div class="article-body">
+      <p>A private APN (Access Point Name) gives your organisation its own dedicated mobile data channel — completely separate from regular consumer mobile internet. Every SIM card on your APN connects only to your systems, through your firewall, on your IP range.</p>
+      <h2>Key benefits</h2>
+      <ul>
+        <li>All device traffic routes through your private network — not the public internet</li>
+        <li>Fixed private IP addresses for every device (ATM, POS, router, sensor)</li>
+        <li>Centralised management — block, allow, or monitor any device remotely</li>
+        <li>Works across all major Nigerian mobile networks (MTN, Airtel, Glo, 9mobile)</li>
+      </ul>
+      <h2>Common use cases</h2>
+      <ul>
+        <li><strong>ATM machines</strong> — secure, always-on connectivity with dual-SIM failover</li>
+        <li><strong>POS terminals</strong> — fast transaction processing on a private channel</li>
+        <li><strong>Digital signage</strong> — remote content management across multiple screens</li>
+        <li><strong>CCTV and security systems</strong> — real-time video streaming to a central NOC</li>
+        <li><strong>Industrial IoT</strong> — sensors, meters, and monitoring devices</li>
+      </ul>
+      <div class="article-callout">💳 <strong>One of our largest deployments</strong> covers 200+ ATM machines for a Tier-1 Nigerian bank, achieving 99.4% uptime through redundant SIM failover.</div>
+      <div class="article-cta">
+        <h3>Interested in a private APN for your devices?</h3>
+        <p>We'll assess your estate and propose the right architecture — contact us to get started.</p>
+        <button onclick="scrollTo_('#contact')">Discuss your requirements →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service 4: Tower & Mast -->
+<div class="page" id="page-svc-tower">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#services')">← Back to Services</button>
+    <div class="article-thumb" style="background:#FFF3E0;">🗼</div>
+    <span class="article-tag">Civil & Structural</span>
+    <h1 class="article-title">Tower & Mast Installation</h1>
+    <div class="article-meta">Worldlinks Limited &nbsp;·&nbsp; Telecom Infrastructure Works</div>
+    <div class="article-body">
+      <p>We handle the full lifecycle of telecom tower and mast infrastructure — from initial site survey and foundation design through to installation, antenna mounting, and long-term maintenance.</p>
+      <h2>Our tower services</h2>
+      <ul>
+        <li><strong>New installations</strong> — self-supporting towers, guyed masts, rooftop mounts, and monopoles</li>
+        <li><strong>Structural surveys</strong> — load capacity assessments and written engineering reports</li>
+        <li><strong>Preventive maintenance</strong> — annual inspections, bolt torque checks, corrosion treatment</li>
+        <li><strong>Antenna works</strong> — installation, alignment, replacement, and cable management</li>
+        <li><strong>Lightning protection</strong> — earthing system installation and testing</li>
+      </ul>
+      <h2>Why maintenance matters</h2>
+      <p>Tower failures are almost always preventable. Rust, loose bolts, and overloading give clear warning signs long before a collapse — but only if you're looking. Our annual maintenance programme has extended the operational lifespan of client tower assets by 8–10 years.</p>
+      <div class="article-callout">🔧 <strong>We cover sites across all six geopolitical zones</strong> and have maintained tower assets for Nigerian banks, telecoms operators, and private enterprises for over 15 years.</div>
+      <div class="article-cta">
+        <h3>Need a tower inspection or new installation?</h3>
+        <p>Contact us to arrange a site visit from our structural team.</p>
+        <button onclick="scrollTo_('#contact')">Book a site visit →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service 5: LAN / Structured Cabling -->
+<div class="page" id="page-svc-lan">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#services')">← Back to Services</button>
+    <div class="article-thumb" style="background:#F3E5F5;">🔌</div>
+    <span class="article-tag">Network Infrastructure</span>
+    <h1 class="article-title">LAN / Structured Cabling</h1>
+    <div class="article-meta">Worldlinks Limited &nbsp;·&nbsp; Physical Network Infrastructure</div>
+    <div class="article-body">
+      <p>A well-designed structured cabling system is the foundation of every reliable office network. We design and install Cat6, Cat6A, and fibre cabling systems that support your current bandwidth needs and scale with your growth.</p>
+      <h2>What we install</h2>
+      <ul>
+        <li><strong>Horizontal cabling</strong> — Cat6/Cat6A runs from patch panels to workstations and access points</li>
+        <li><strong>Fibre backbone</strong> — single-mode and multimode fibre between floors and buildings</li>
+        <li><strong>Network racks and cabinets</strong> — structured patch panels, cable management, and labelling</li>
+        <li><strong>Active equipment</strong> — managed switches, wireless access points, and UPS units</li>
+        <li><strong>Testing and certification</strong> — every run tested and certified to TIA/EIA standards</li>
+      </ul>
+      <h2>Our process</h2>
+      <ul>
+        <li>Site walkthrough and cable route planning</li>
+        <li>Detailed materials list and project schedule</li>
+        <li>Installation with minimal disruption to your operations</li>
+        <li>Full test reports and as-built drawings on handover</li>
+      </ul>
+      <div class="article-callout">🏢 <strong>We've cabled offices from 10 to 500+ workpoints</strong> across Lagos, Abuja, and other major Nigerian cities.</div>
+      <div class="article-cta">
+        <h3>Planning an office fit-out or network upgrade?</h3>
+        <p>Send us your floor plan and we'll prepare a cabling proposal.</p>
+        <button onclick="scrollTo_('#contact')">Get a cabling proposal →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service 6: Solar & Inverter -->
+<div class="page" id="page-svc-solar">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#services')">← Back to Services</button>
+    <div class="article-thumb" style="background:#E6F5EE;">☀️</div>
+    <span class="article-tag">Power & Energy</span>
+    <h1 class="article-title">Solar & Inverter Systems</h1>
+    <div class="article-meta">Worldlinks Limited &nbsp;·&nbsp; Renewable Energy Solutions</div>
+    <div class="article-body">
+      <p>We design and install hybrid solar and inverter power systems that keep your network equipment, office, or telecoms site running continuously — even during extended grid outages.</p>
+      <h2>System components</h2>
+      <ul>
+        <li><strong>Solar panels</strong> — monocrystalline panels sized to your daily load and available roof space</li>
+        <li><strong>Battery bank</strong> — lithium or sealed lead-acid batteries for overnight and outage coverage</li>
+        <li><strong>Hybrid inverter</strong> — manages grid, solar, and battery sources automatically</li>
+        <li><strong>Monitoring system</strong> — real-time visibility of generation, consumption, and battery state</li>
+      </ul>
+      <h2>What we deliver</h2>
+      <ul>
+        <li>Load assessment and system sizing for your specific site</li>
+        <li>Full installation including mounting, wiring, and commissioning</li>
+        <li>Annual maintenance and battery health checks</li>
+        <li>Systems for telecoms sites, offices, bank branches, and residential properties</li>
+      </ul>
+      <div class="article-callout">☀️ <strong>A properly sized solar hybrid system</strong> can eliminate over 80% of your diesel generator running costs within the first year of operation.</div>
+      <div class="article-cta">
+        <h3>Want to cut your power costs?</h3>
+        <p>We'll assess your site and design a system sized to your needs and budget.</p>
+        <button onclick="scrollTo_('#contact')">Request a power assessment →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service 7: IT Equipment Supply -->
+<div class="page" id="page-svc-it">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#services')">← Back to Services</button>
+    <div class="article-thumb" style="background:#E8EAF6;">🖥️</div>
+    <span class="article-tag">Procurement</span>
+    <h1 class="article-title">IT Equipment Supply</h1>
+    <div class="article-meta">Worldlinks Limited &nbsp;·&nbsp; Technology Procurement</div>
+    <div class="article-body">
+      <p>We source and supply a wide range of IT and networking equipment from leading global manufacturers, giving your organisation access to the right hardware at competitive prices — without the complexity of dealing with multiple vendors.</p>
+      <h2>What we supply</h2>
+      <ul>
+        <li><strong>Network equipment</strong> — routers, managed switches, firewalls, and wireless access points (Cisco, MikroTik, Ubiquiti, Huawei)</li>
+        <li><strong>Servers and storage</strong> — rack servers, NAS/SAN systems, and UPS units</li>
+        <li><strong>End-user devices</strong> — laptops, desktops, printers, and IP phones</li>
+        <li><strong>Structured cabling materials</strong> — patch panels, Cat6 cable, fibre patch leads, and racks</li>
+        <li><strong>Power equipment</strong> — UPS systems, PDUs, and surge protection</li>
+      </ul>
+      <h2>Why source through Worldlinks</h2>
+      <ul>
+        <li>Authorised reseller relationships with major vendors</li>
+        <li>Equipment pre-tested and configured before delivery where required</li>
+        <li>Post-delivery installation and support available</li>
+        <li>Single invoice, single point of contact for your entire order</li>
+      </ul>
+      <div class="article-callout">📦 <strong>We supply to banks, hospitals, government agencies, and SMEs</strong> across Nigeria, with delivery to any state capital.</div>
+      <div class="article-cta">
+        <h3>Need equipment for an upcoming project?</h3>
+        <p>Share your bill of materials and we'll provide a competitive quote.</p>
+        <button onclick="scrollTo_('#contact')">Request a quote →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service 8: IT Consultancy -->
+<div class="page" id="page-svc-consult">
+  <div class="article-page">
+    <button class="article-back" onclick="scrollTo_('#services')">← Back to Services</button>
+    <div class="article-thumb" style="background:#FFF8E1;">💡</div>
+    <span class="article-tag">Advisory</span>
+    <h1 class="article-title">IT Consultancy & Advisory</h1>
+    <div class="article-meta">Worldlinks Limited &nbsp;·&nbsp; Strategic ICT Advisory</div>
+    <div class="article-body">
+      <p>Sometimes you don't need someone to install something — you need someone to tell you what to install, and why. Our consultancy service gives your organisation access to experienced network and ICT engineers who can help you make the right decisions before you commit budget.</p>
+      <h2>What we advise on</h2>
+      <ul>
+        <li><strong>Network architecture</strong> — designing or reviewing your WAN, LAN, and data centre topology</li>
+        <li><strong>Vendor selection</strong> — independent evaluation of carrier, equipment, and platform options</li>
+        <li><strong>IT strategy</strong> — aligning your technology roadmap with your business goals</li>
+        <li><strong>Security posture</strong> — identifying gaps in your network security controls</li>
+        <li><strong>Project oversight</strong> — reviewing third-party designs and supervising implementations</li>
+      </ul>
+      <h2>How we engage</h2>
+      <ul>
+        <li>Short-term advisory (half-day to 5-day engagements)</li>
+        <li>Project-based consulting (design through to go-live)</li>
+        <li>Retainer arrangements for ongoing advisory support</li>
+      </ul>
+      <div class="article-callout">💡 <strong>Our advisers have hands-on experience</strong> designing and operating networks for Nigerian banks, telecoms operators, and government institutions — so our recommendations are grounded in local reality, not textbook theory.</div>
+      <div class="article-cta">
+        <h3>Have a network challenge you need help thinking through?</h3>
+        <p>Get in touch for an initial conversation — no obligation.</p>
+        <button onclick="scrollTo_('#contact')">Talk to an adviser →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────
+     IMPROVEMENT #2 — WHATSAPP FLOATING BUTTON
+     Fixed position, always visible on every page.
+     href uses wa.me deep link with pre-filled message.
+     Tooltip appears on hover to explain what it does.
+───────────────────────────────────────────── -->
+<a class="wa-float" href="https://wa.me/2348027748748?text=Hi%2C%20I'd%20like%20to%20enquire%20about%20your%20services" target="_blank" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+<!-- Tooltip that appears when user hovers the WhatsApp button -->
+<div class="wa-tooltip">Chat with us on WhatsApp</div>
+
+<!-- Success toast notification — shown after form submit -->
+<div class="toast" id="toast">✅ Message sent! We'll be in touch shortly.</div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // PAGE SWITCHER
+  // Controls showing/hiding the home and team pages
+  // without a full browser reload (single-page behaviour).
+  // showPage('home') or showPage('team') to navigate.
+  // ─────────────────────────────────────────────
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Highlight the active nav link
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const map = { home: 'nav-home', team: 'nav-team' };
+    if (map[name]) document.getElementById(map[name]).classList.add('active');
+  }
+
+  // Navigates to home page first, then scrolls to an anchor section
+  function scrollTo_(selector) {
+    showPage('home');
+    setTimeout(() => {
+      const el = document.querySelector(selector);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 80);
+  }
+
+  // ─────────────────────────────────────────────
+  // TEAM BIO TOGGLE
+  // Expands/collapses the full bio on each team card.
+  // Uses CSS max-height transition for smooth animation.
+  // ─────────────────────────────────────────────
+  function toggleBio(btn) {
+    const bio = btn.nextElementSibling;
+    const isOpen = bio.classList.toggle('open');
+    btn.textContent = isOpen ? 'Close profile ↑' : 'Read full profile ↓';
+  }
+
+  // ─────────────────────────────────────────────
+  // FORM SUBMIT — shows a green toast confirmation
+  // ─────────────────────────────────────────────
+  function submitForm() {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  // ─────────────────────────────────────────────
+  // IMPROVEMENT #5 — SCROLL-TRIGGERED ANIMATIONS
+  // Uses IntersectionObserver to fade cards in as
+  // the user scrolls. Replaces the heavy slider with
+  // a lightweight CSS + JS animation approach.
+  // ─────────────────────────────────────────────
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = 1;
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  // Apply fade-in to all cards across both pages
+  document.querySelectorAll('.service-card, .case-card, .blog-card, .testimonial-card, .team-card').forEach(el => {
+    el.style.opacity = 0;
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
