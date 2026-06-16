@@ -60,6 +60,16 @@
   .nav-links a { color: #334155; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; cursor: pointer; }
   .nav-links a:hover, .nav-links a.active { color: #1565C0; }
   .nav-hamburger { display: none; background: none; border: none; cursor: pointer; color: #0B1F3A; font-size: 24px; }
+  /* Mobile dropdown menu when hamburger is clicked */
+  .nav-links.open {
+    display: flex; flex-direction: column; align-items: flex-start;
+    position: absolute; top: 72px; left: 0; right: 0;
+    background: #FFFFFF; border-top: 1px solid #D8E0EC;
+    border-bottom: 3px solid #1565C0;
+    padding: 16px 5% 20px; gap: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    z-index: 99;
+  }
 
   /* ─────────────────────────────────────────────
      IMPROVEMENT #1 — CLEAR CTA (CALL-TO-ACTION)
@@ -484,7 +494,7 @@
     <a onclick="scrollTo_('#blog')">Insights</a>
     <a onclick="scrollTo_('#contact')">Contact</a>
   </div>
-  <button class="nav-hamburger" aria-label="Menu">☰</button>
+  <button class="nav-hamburger" id="hamburger-btn" aria-label="Menu">☰</button>
 </nav>
 
 
